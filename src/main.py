@@ -76,8 +76,11 @@ def chan_serial_from_vid_serial(vid_serial):
     def find_channel():
         return s.find('div', id='video_page_header').select_one('a[href^="/c/"]')['href'].split('/')[-1]
 
-    chan_serial = find_channel()
-    return chan_serial
+    try:
+        chan_serial = find_channel()
+        return chan_serial
+    except AttributeError:
+        return chan_serial_from_vid_serial(vid_serial)
 
 
 def main():
