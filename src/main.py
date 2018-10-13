@@ -1,5 +1,6 @@
 import bs4
 import psycopg2
+import random
 import requests
 
 
@@ -54,9 +55,12 @@ def main():
     while True:
         conn = connect()
         pages = max_pages()
+        range_nums = list(range(1, pages + 1))
+        random.shuffle(range_nums)
+
         print('Found', pages, 'pages')
 
-        for i in range(1, pages + 1):
+        for i in range_nums:
             print('On page', i)
 
             chans = channels(i)
