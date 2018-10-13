@@ -42,7 +42,7 @@ def connect():
 
 
 def insert(conn, serial):
-    sql = 'INSERT INTO youtube.simple.channels VALUES (%s) ON CONFLICT (chan_id) DO NOTHING;'
+    sql = 'INSERT INTO youtube.simple.channels (chan_serial) VALUES (%s) ON CONFLICT (chan_serial) DO NOTHING;'
     cursor = conn.cursor()
 
     cursor.execute(sql, [serial])
