@@ -41,14 +41,31 @@ def connect():
     return psycopg2.connect(user='admin', password='admin', host='192.168.1.63', port='5432', database='youtube')
 
 
-def main():
-    pages = max_pages()
-    print('Found', pages, 'pages')
+def insert(conn, serial):
+    sql = 'INSERT INTO youtube.simple.channels VALUES (%s) ON CONFLICT (chan_id) DO NOTHING;'
+    cursor = conn.cursor()
 
-    for i in range(1, pages + 1):
-        print('On page', i)
-        chans = channels(i)
-        print('Found', len(chans))
+    cursor.execute(sql, [serial])
+    conn.commit()
+    cursor.close()
+
+
+def main():
+    while True:
+        conn = connect()
+        pages = max_pages()
+        print('Found', pages, 'pages')
+
+        for i in range(1, pages + 1):
+            print('On page', i)
+
+            chans = channels(i)
+            print('Found', len(chans))
+            for c in chans:
+                print('Inserting', c)
+                insert(conn, c)
+
+        conn.close()
 
 
 if __name__ == '__main__':
