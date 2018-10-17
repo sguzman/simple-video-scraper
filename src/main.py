@@ -63,7 +63,7 @@ def insert(conn, video_serial, chan_serial):
     insert_channel()
     chan_id = query_channel()
 
-    sql_insert = 'INSERT INTO youtube.videos (channel_id, video_serial) VALUES (%s, %s) ON CONFLICT (video_serial) DO NOTHING;'
+    sql_insert = 'INSERT INTO videos (channel_id, video_serial) VALUES (%s, %s) ON CONFLICT (video_serial) DO NOTHING;'
     cursor.execute(sql_insert, [chan_id, video_serial])
     conn.commit()
     cursor.close()
