@@ -39,14 +39,14 @@ def videos(idx):
 
 
 def connect():
-    return psycopg2.connect(user='admin', password='admin', host='192.168.1.63', port='5432', database='youtube')
+    return psycopg2.connect(user='admin', password='admin', host='localhost', port='5432', database='youtube')
 
 
 def insert(conn, video_serial, chan_serial):
     cursor = conn.cursor()
 
     def query_channel():
-        sql_query = 'SELECT id FROM youtube.simple.channels WHERE chan_serial = %s LIMIT 1'
+        sql_query = 'SELECT id FROM channels WHERE channel_serial = %s LIMIT 1'
         cursor.execute(sql_query, [chan_serial])
         chan = cursor.fetchone()
         conn.commit()
@@ -54,7 +54,7 @@ def insert(conn, video_serial, chan_serial):
         return chan[0]
 
     def insert_channel():
-        sql = 'INSERT INTO youtube.simple.channels (chan_serial) VALUES (%s) ON CONFLICT (chan_serial) DO NOTHING;'
+        sql = 'INSERT INTO channels (channel_serial) VALUES (%s) ON CONFLICT (channel_serial) DO NOTHING;'
         cursor = conn.cursor()
 
         cursor.execute(sql, [chan_serial])
@@ -63,7 +63,7 @@ def insert(conn, video_serial, chan_serial):
     insert_channel()
     chan_id = query_channel()
 
-    sql_insert = 'INSERT INTO youtube.simple.videos (chan_id, video_serial) VALUES (%s, %s) ON CONFLICT (video_serial) DO NOTHING;'
+    sql_insert = 'INSERT INTO youtube.videos (channel_id, video_serial) VALUES (%s, %s) ON CONFLICT (video_serial) DO NOTHING;'
     cursor.execute(sql_insert, [chan_id, video_serial])
     conn.commit()
     cursor.close()
